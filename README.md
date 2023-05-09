@@ -39,6 +39,36 @@ To set up and configure the pipeline, follow these steps:
 3. Configure the pipeline settings (e.g., HDFS location, Hive table schema)
 4. Run the data collection system and Spark job
 
+## Running the Project
+
+1. Open two separate terminals and run the following commands in each of them:
+   
+   ```
+   python3 /path/to/five_minutes_listener.py
+   ```
+   
+   ```
+   /opt/spark3/bin/spark-submit --master yarn --deploy-mode cluster /path/to/twitter_structured_stream.py
+   ```
+   
+   Replace `/path/to` with the actual path to the Python script and Spark script respectively.
+
+2. After running the first step, add the following command to a shell script file (e.g. `twitter.sh`):
+   
+   ```
+   /opt/spark2/bin/spark-sql -f /path/to/spark_hive.sql
+   ```
+   
+   Replace `/path/to` with the actual path to the `spark_hive.sql` file.
+
+3. Add the shell script file to crontab to run it at specific intervals. For example, to run it every 10 minutes, add the following line to crontab:
+   
+   ```
+   10 * * * * /path/to/twitter.sh
+   ```
+   
+   Replace `/path/to` with the actual path to the `twitter.sh` file.
+
 ## Data Collection System
 
 The data collection system is responsible for ingesting live Twitter data using the Twitter Streaming API and sending it over a socket connection to a listening client. The code is written in Python and uses various modules and functions to handle API requests and socket communication. The collected data is in JSON format.
